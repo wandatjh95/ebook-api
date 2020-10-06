@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Author;
+use JWTAuth;
 
 class AuthorController extends Controller
 {
@@ -14,12 +15,16 @@ class AuthorController extends Controller
      */
     public function index()
     {
+
         $author = Author::all();
         if($author && $author->count() > 0){
             return response(['message'=>'Show data success.','data'=> $author],200);
         }else{
             return response(['message'=>'Data not found.','data'=> null],404);
         }
+    }
+    public function __construct() {
+        $this->middleware('auth:api');
     }
 
     /**
@@ -72,8 +77,8 @@ class AuthorController extends Controller
         //
         $author = Author::find($id);
         if($author){
-            $author->name = $request->name;
-            $author->date_of_birth = $request->date_of_birth;
+            $author->name = $request-> name;
+            $author->date_of_birth = $request-> date_of_birth;
             $author->place_of_birth = $request->place_of_birth;
             $author->gender = $request->gender;
             $author->email = $request->email;
@@ -84,6 +89,7 @@ class AuthorController extends Controller
             return response(['message'=>'Update data failed.','data'=> null],406);
         }
     }
+
 
     /**
      * Remove the specified resource from storage.
